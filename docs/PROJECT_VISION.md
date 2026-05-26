@@ -1,6 +1,6 @@
 # 🍳 RecipeHub — Project Vision
 
-> **A collaborative recipe sharing platform built by two friends learning full-stack development together.**
+> **Two beginners with a big idea, AI agents that do the heavy lifting, and a real app at the end of it.**
 
 ---
 
@@ -12,12 +12,45 @@
 
 ## Why This Project?
 
-This isn't just about building a website. It's about:
+We're not professional developers. We're **beginners who are still learning the basics** — and that's exactly the point.
 
-- **Learning collaboration** — How real development teams work using Git, GitHub, pull requests, and code reviews.
-- **Understanding full-stack development** — Connecting a frontend UI to a backend API to a database, end to end.
-- **Building something real** — Not a tutorial clone, but a project you design, plan, and ship yourselves.
-- **Experiencing teamwork** — Dividing work, resolving merge conflicts, communicating decisions, and holding each other accountable.
+Instead of spending months trying to master every framework and tool before building anything, we're taking a different approach: **vibe coding**.
+
+We describe what we want. AI agents build it. We learn by seeing the results, understanding the code, and guiding the direction. This project is about:
+
+- **Learning by building** — Not by reading textbooks, but by watching a real app come together and understanding how the pieces fit.
+- **Directing AI agents** — Learning how to communicate what you want clearly enough that an AI can build it. This is a real and increasingly valuable skill.
+- **Understanding, not memorizing** — We don't need to write every line of code from memory. We need to understand what the code does, why it's structured that way, and how to change it.
+- **Collaborating as a team** — Even with AI doing the coding, we still need to agree on features, divide responsibilities, review what gets built, and keep things on track.
+- **Shipping something real** — At the end of this, we'll have a live, working website we built together. That's the goal.
+
+---
+
+## Our Approach: Vibe Coding + AI Agents
+
+### What is Vibe Coding?
+
+Vibe coding means you **describe the vibe** — what you want the app to look and feel like — and let AI agents handle the technical implementation. You stay in the driver's seat (deciding features, design, direction) while the AI does the typing.
+
+### How We'll Work
+
+```
+     the humans                          AI Agents
+   ─────────────────                   ─────────────
+   💡 Come up with ideas        →     🤖 Write the code
+   🎨 Describe the look/feel   →     🤖 Build the UI
+   📝 Define features          →     🤖 Create the backend
+   👀 Review what gets built   →     🤖 Fix bugs & iterate
+   🧠 Learn from the output    →     🤖 Explain how it works
+```
+
+### Why This Works for Us
+
+- We don't need to know how to write a JWT auth system from scratch — we need to know **what authentication is** and **why it matters**.
+- We don't need to memorize Express middleware syntax — we need to understand **what middleware does** and **when to use it**.
+- We don't need to hand-write CSS Grid layouts — we need to know **how to describe** the layout we want so the AI gets it right.
+
+The AI handles the **how**. We handle the **what** and **why**.
 
 ---
 
@@ -42,7 +75,7 @@ This isn't just about building a website. It's about:
 | **Shopping List** | Auto-generate a grocery list from selected recipes |
 | **Social Features** | Follow other cooks, share recipes to social media |
 | **Dark Mode** | Toggle between light and dark themes |
-| **Mobile App** | A React Native or Flutter companion app |
+| **Mobile App** | A companion mobile app |
 
 ---
 
@@ -65,7 +98,7 @@ This isn't just about building a website. It's about:
 
 ## Success Criteria
 
-By the end of this project, you should be able to:
+By the end of this project, we should be able to:
 
 1. ✅ Visit the live deployed website
 2. ✅ Create an account and log in
@@ -73,22 +106,22 @@ By the end of this project, you should be able to:
 4. ✅ Browse and search recipes posted by others
 5. ✅ Save favourite recipes to your profile
 6. ✅ Leave a rating and comment on a recipe
-7. ✅ Have a clean Git history showing collaborative development
+7. ✅ **Explain** how the app works at a high level — even if we didn't type every line
 
 ---
 
 ## The Bigger Picture
 
-This project is a **learning vehicle**. The recipe website is the *what* — but the real value is the *how*:
+This project is a **learning experiment**. The recipe website is the *what* — but the real value is learning:
 
-- How to break a big idea into small, shippable pieces
-- How to divide work between two developers
-- How to communicate technical decisions
-- How to review each other's code
-- How to debug, test, and deploy a real application
+- How to turn a vague idea into a working product
+- How to communicate with AI agents to get the results you want
+- How to read and understand code that someone (or something) else wrote
+- How to collaborate with another person on a shared codebase
+- How to ship something real to the internet
 
-Every professional developer has gone through this process. This project is your version of it.
+We're not trying to become senior developers overnight. We're learning the **shape** of how software gets built — and that understanding is incredibly valuable, whether we write the code by hand or guide an AI to do it.
 
 ---
 
-> *"The best way to learn is to build something you'd actually want to use."*
+> *"You don't need to be a mechanic to drive a car. But understanding how the engine works makes you a much better driver."*

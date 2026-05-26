@@ -1,328 +1,200 @@
 # 🏗️ RecipeHub — Technical Architecture
 
-> **A complete technical blueprint of the systems, languages, tools, and infrastructure powering RecipeHub.**
+> **A simplified overview of how RecipeHub is built. You don't need to memorize this — it's a reference for when you're curious.**
 
 ---
 
-## High-Level Architecture
+## How the App Works (The Simple Version)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                        CLIENT                           │
-│              (React + Vite — runs in browser)           │
-│                                                         │
-│  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌────────┐│
-│  │  Pages   │  │Components│  │  Context   │  │ Hooks  ││
-│  │(Routes)  │  │(Reusable)│  │(Auth/State)│  │(Custom)││
-│  └──────────┘  └──────────┘  └───────────┘  └────────┘│
-└──────────────────────┬──────────────────────────────────┘
-                       │  HTTP requests (Axios / Fetch)
-                       │  (JSON data + JWT in headers)
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│                        SERVER                           │
-│             (Node.js + Express — REST API)              │
-│                                                         │
-│  ┌──────────┐  ┌───────────┐  ┌───────────┐  ┌───────┐│
-│  │  Routes  │  │Middleware │  │Controllers │  │Models ││
-│  │(/api/*)  │  │(auth,cors)│  │(logic)     │  │(DB)   ││
-│  └──────────┘  └───────────┘  └───────────┘  └───────┘│
-└──────────────────────┬──────────────────────────────────┘
-                       │  Mongoose ODM
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│                      DATABASE                           │
-│               (MongoDB — NoSQL document DB)             │
-│                                                         │
-│  ┌──────────┐  ┌──────────┐  ┌───────────┐             │
-│  │  Users   │  │ Recipes  │  │ Comments  │             │
-│  └──────────┘  └──────────┘  └───────────┘             │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────┐
+│    YOUR BROWSER          │    ← This is the Frontend
+│    (What you see)        │       Built with React
+│    Pages, buttons, forms │
+└────────────┬────────────┘
+             │
+             │  Sends requests over the internet
+             │  ("Give me all recipes", "Log me in")
+             ▼
+┌─────────────────────────┐
+│    THE SERVER             │    ← This is the Backend
+│    (The brain)            │       Built with Node.js + Express
+│    Handles logic & rules  │
+└────────────┬────────────┘
+             │
+             │  Reads/writes data
+             ▼
+┌─────────────────────────┐
+│    THE DATABASE           │    ← This is where data lives
+│    (The memory)           │       MongoDB (cloud-hosted, free)
+│    Users, recipes, etc.   │
+└─────────────────────────┘
 ```
+
+**That's it.** Every web app works this way — a frontend the user sees, a backend that does the thinking, and a database that remembers everything.
 
 ---
 
-## Tech Stack Breakdown
+## What Each Part Does
 
-### Frontend
+### Frontend (the website you see in the browser)
 
-| Technology | Purpose | Why This Choice |
+| What | Tool | Plain English |
 |---|---|---|
-| **React 18** | UI library | Industry standard, component-based, massive ecosystem |
-| **Vite** | Build tool & dev server | Blazing fast hot reload, modern defaults, simple config |
-| **React Router v6** | Client-side routing | Declarative routing, nested routes, route protection |
-| **Axios** | HTTP client | Cleaner API than fetch, interceptors for auth tokens |
-| **CSS Modules** or **Vanilla CSS** | Styling | Scoped styles without extra dependencies to start |
-| **React Icons** | Icon library | Thousands of icons, tree-shakeable |
-| **React Hot Toast** | Notifications | Lightweight toast notifications for feedback |
+| UI framework | **React** | Lets us build the website out of reusable pieces (components) |
+| Dev server | **Vite** | Makes development fast — you save a file and instantly see the change |
+| Page navigation | **React Router** | Handles clicking between pages (login, recipes, profile) without full page reloads |
+| Talking to server | **Axios** | A helper that makes it easy to send requests to the backend |
+| Styling | **CSS** | Makes everything look good — colours, fonts, spacing, layout |
+| Icons | **React Icons** | Ready-to-use icons (hearts, stars, search, etc.) |
 
-### Backend
+### Backend (the server that runs behind the scenes)
 
-| Technology | Purpose | Why This Choice |
+| What | Tool | Plain English |
 |---|---|---|
-| **Node.js 20+** | Runtime | JavaScript everywhere — same language front and back |
-| **Express.js** | Web framework | Minimal, flexible, huge community, easy to learn |
-| **Mongoose** | MongoDB ODM | Schema validation, query building, middleware hooks |
-| **bcrypt** | Password hashing | Industry standard for secure password storage |
-| **jsonwebtoken (JWT)** | Authentication tokens | Stateless auth, easy to implement, widely used |
-| **multer** | File upload handling | Middleware for multipart/form-data (image uploads) |
-| **cors** | Cross-origin requests | Allow frontend to call backend API from different port/domain |
-| **dotenv** | Environment variables | Keep secrets out of code |
-| **express-validator** | Input validation | Validate and sanitize request data |
+| Runtime | **Node.js** | Lets us run JavaScript on a server (not just in a browser) |
+| Framework | **Express** | Makes it easy to create API endpoints (URLs the frontend calls) |
+| Database helper | **Mongoose** | Makes it easy to read/write data to MongoDB |
+| Password security | **bcrypt** | Scrambles passwords so nobody can read them — not even us |
+| Login tokens | **JWT** | A digital pass that proves you're logged in |
+| Image uploads | **multer** | Handles file uploads (recipe photos) |
+| Security | **cors, dotenv** | Basic protections so the app is safe |
 
-### Database
+### Database (where data is stored)
 
-| Technology | Purpose | Why This Choice |
+| What | Tool | Plain English |
 |---|---|---|
-| **MongoDB** | Primary database | Flexible schema fits recipes well (varying ingredients/steps), JSON-like documents, free tier on Atlas |
-| **MongoDB Atlas** | Cloud hosting | Free 512MB cluster, no server management, built-in backups |
+| Database | **MongoDB** | Stores data as flexible documents (like JSON files) |
+| Hosting | **MongoDB Atlas** | Free cloud hosting — no need to install anything on your computer |
 
 ### Image Storage
 
-| Technology | Purpose | Why This Choice |
+| What | Tool | Plain English |
 |---|---|---|
-| **Cloudinary** | Image hosting & CDN | Free tier (25GB), automatic optimization/resizing, easy API |
-| *Alternative: local `/uploads`* | Dev-only fallback | Store files on server during development |
+| Image hosting | **Cloudinary** | Stores recipe photos in the cloud, loads them fast, free tier available |
 
 ---
 
-## Project Structure
+## What Gets Stored in the Database
+
+### Users
+When someone signs up, we save:
+- Username, email, and password (scrambled)
+- Profile picture and bio
+- List of favourite recipes
+
+### Recipes
+When someone posts a recipe, we save:
+- Title, description, and image
+- List of ingredients (with quantities)
+- Step-by-step instructions
+- Cook time, difficulty, cuisine type
+- Who posted it and when
+- Ratings from other users
+
+### Comments
+When someone comments on a recipe, we save:
+- The comment text
+- Who wrote it
+- Which recipe it's on
+- When it was posted
+
+---
+
+## The API (How Frontend Talks to Backend)
+
+Think of the API as a **menu** — the frontend looks at the menu, picks what it wants, and the backend prepares it.
+
+### User Stuff
+| What Happens | How |
+|---|---|
+| Sign up | Frontend sends username + email + password → Backend creates the account |
+| Log in | Frontend sends email + password → Backend checks it and sends back a token |
+| Get profile | Frontend asks "who am I?" → Backend looks up the token and responds |
+
+### Recipe Stuff
+| What Happens | How |
+|---|---|
+| Browse recipes | Frontend asks for recipes → Backend sends a list |
+| View one recipe | Frontend asks for a specific recipe → Backend sends it |
+| Post a recipe | Frontend sends recipe data → Backend saves it |
+| Edit a recipe | Frontend sends updated data → Backend updates it (only if you're the author) |
+| Delete a recipe | Frontend asks to delete → Backend removes it (only if you're the author) |
+
+### Social Stuff
+| What Happens | How |
+|---|---|
+| Add to favourites | Frontend says "save this recipe" → Backend adds it to your favourites list |
+| Rate a recipe | Frontend sends a star rating → Backend saves it and updates the average |
+| Comment on a recipe | Frontend sends comment text → Backend saves it |
+
+---
+
+## Project Folder Structure
 
 ```
 collab/
-├── docs/                          # Project documentation (you are here)
-│   ├── PROJECT_VISION.md
-│   ├── PROJECT_PLAN.md
-│   ├── TECHNICAL_ARCHITECTURE.md
-│   └── LEARNING_OUTCOMES.md
+├── docs/                    # 📄 Documentation (you are here)
 │
-├── client/                        # Frontend (React + Vite)
-│   ├── public/                    # Static assets
+├── client/                  # 🎨 Frontend (the website)
 │   ├── src/
-│   │   ├── assets/                # Images, fonts, etc.
-│   │   ├── components/            # Reusable UI components
-│   │   │   ├── Navbar/
-│   │   │   ├── RecipeCard/
-│   │   │   ├── SearchBar/
-│   │   │   ├── StarRating/
-│   │   │   └── Footer/
-│   │   ├── pages/                 # Page-level components
-│   │   │   ├── Home/
-│   │   │   ├── Login/
-│   │   │   ├── Register/
-│   │   │   ├── RecipeList/
-│   │   │   ├── RecipeDetail/
-│   │   │   ├── CreateRecipe/
-│   │   │   ├── Profile/
-│   │   │   ├── Favourites/
-│   │   │   └── NotFound/
-│   │   ├── context/               # React Context providers
-│   │   │   └── AuthContext.jsx
-│   │   ├── hooks/                 # Custom React hooks
-│   │   │   └── useAuth.js
-│   │   ├── services/              # API call functions
-│   │   │   ├── authService.js
-│   │   │   └── recipeService.js
-│   │   ├── utils/                 # Helper functions
-│   │   ├── App.jsx                # Root component with routes
-│   │   ├── main.jsx               # Entry point
-│   │   └── index.css              # Global styles
-│   ├── .env                       # Frontend env vars (VITE_API_URL)
-│   ├── package.json
-│   └── vite.config.js
+│   │   ├── components/      # Reusable pieces (navbar, recipe cards, etc.)
+│   │   ├── pages/           # Full pages (home, login, recipe detail, etc.)
+│   │   ├── context/         # Shared state (is the user logged in?)
+│   │   ├── services/        # Functions that call the backend API
+│   │   ├── App.jsx          # The main app file
+│   │   └── index.css        # Global styles
+│   └── package.json         # Frontend dependencies
 │
-├── server/                        # Backend (Node + Express)
-│   ├── config/
-│   │   └── db.js                  # MongoDB connection setup
-│   ├── controllers/               # Request handlers (business logic)
-│   │   ├── authController.js
-│   │   ├── recipeController.js
-│   │   ├── commentController.js
-│   │   └── userController.js
-│   ├── middleware/                 # Custom middleware
-│   │   ├── auth.js                # JWT verification
-│   │   ├── errorHandler.js        # Centralized error handling
-│   │   └── upload.js              # Multer config for images
-│   ├── models/                    # Mongoose schemas
-│   │   ├── User.js
-│   │   ├── Recipe.js
-│   │   └── Comment.js
-│   ├── routes/                    # Express route definitions
-│   │   ├── authRoutes.js
-│   │   ├── recipeRoutes.js
-│   │   ├── commentRoutes.js
-│   │   └── userRoutes.js
-│   ├── utils/                     # Helper functions
-│   ├── .env                       # Backend env vars (MONGO_URI, JWT_SECRET, etc.)
-│   ├── package.json
-│   └── server.js                  # Entry point — starts Express
+├── server/                  # ⚙️ Backend (the server)
+│   ├── controllers/         # The logic for each feature
+│   ├── models/              # Database structure definitions
+│   ├── routes/              # URL definitions (what endpoints exist)
+│   ├── middleware/           # Helper functions that run on every request
+│   └── server.js            # The starting point — runs the server
 │
-├── .gitignore                     # Ignore node_modules, .env, etc.
-└── README.md                      # Project overview & setup instructions
+├── .gitignore               # Files Git should ignore
+└── README.md                # Project description
 ```
+
+> **You don't need to memorize this.** The AI agent will create and manage these files. This is here so you have a rough idea of where things live.
 
 ---
 
-## Database Schema Design
+## How Deployment Works
 
-### Users Collection
-
-```javascript
-{
-  _id: ObjectId,
-  username: String,          // unique, required
-  email: String,             // unique, required
-  password: String,          // hashed with bcrypt, required
-  displayName: String,
-  bio: String,
-  profilePic: String,        // Cloudinary URL
-  favourites: [ObjectId],    // references to Recipe documents
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### Recipes Collection
-
-```javascript
-{
-  _id: ObjectId,
-  title: String,             // required
-  description: String,
-  ingredients: [
-    { name: String, quantity: String, unit: String }
-  ],
-  steps: [
-    { stepNumber: Number, instruction: String }
-  ],
-  image: String,             // Cloudinary URL
-  cookTime: Number,          // in minutes
-  prepTime: Number,          // in minutes
-  servings: Number,
-  difficulty: String,        // "Easy", "Medium", "Hard"
-  cuisine: String,           // "Indian", "Italian", "Mexican", etc.
-  tags: [String],            // ["vegetarian", "quick", "dessert"]
-  author: ObjectId,          // reference to User
-  ratings: [
-    { user: ObjectId, value: Number }  // 1–5
-  ],
-  averageRating: Number,     // computed field
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### Comments Collection
-
-```javascript
-{
-  _id: ObjectId,
-  recipe: ObjectId,          // reference to Recipe
-  author: ObjectId,          // reference to User
-  text: String,              // required
-  createdAt: Date
-}
-```
-
----
-
-## API Endpoints
-
-### Authentication
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| POST | `/api/auth/register` | Register a new user | No |
-| POST | `/api/auth/login` | Log in, receive JWT | No |
-| GET | `/api/auth/me` | Get current user info | Yes |
-
-### Recipes
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| GET | `/api/recipes` | Get all recipes (with search/filter/sort query params) | No |
-| GET | `/api/recipes/:id` | Get a single recipe by ID | No |
-| POST | `/api/recipes` | Create a new recipe | Yes |
-| PUT | `/api/recipes/:id` | Update a recipe (author only) | Yes |
-| DELETE | `/api/recipes/:id` | Delete a recipe (author only) | Yes |
-| POST | `/api/recipes/:id/rate` | Rate a recipe | Yes |
-
-### Comments
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| GET | `/api/recipes/:id/comments` | Get comments for a recipe | No |
-| POST | `/api/recipes/:id/comments` | Add a comment | Yes |
-| DELETE | `/api/comments/:id` | Delete a comment (author only) | Yes |
-
-### Users
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| GET | `/api/users/:id` | Get user profile | No |
-| PUT | `/api/users/:id` | Update user profile | Yes |
-| POST | `/api/users/:id/favourites` | Add recipe to favourites | Yes |
-| DELETE | `/api/users/:id/favourites/:recipeId` | Remove from favourites | Yes |
-| GET | `/api/users/:id/favourites` | Get user's favourite recipes | Yes |
-
----
-
-## Development Tools & Environment
-
-| Tool | Purpose |
-|---|---|
-| **VS Code** | Code editor (both developers should use the same one) |
-| **Git** | Version control |
-| **GitHub** | Repository hosting, PRs, Issues, Project Board |
-| **Postman** or **Thunder Client** | API testing during backend development |
-| **MongoDB Compass** | GUI for viewing/editing database during development |
-| **npm** | Package manager |
-| **nodemon** | Auto-restart server on file changes during development |
-| **ESLint** | Code linting (consistent code style) |
-| **Prettier** | Code formatting (consistent formatting) |
-
----
-
-## Deployment Architecture
+When we're ready to go live:
 
 ```
 ┌──────────────┐         ┌──────────────────┐         ┌──────────────┐
-│   Vercel /   │  HTTPS  │   Render /       │  TCP    │   MongoDB    │
-│   Netlify    │ ◄─────► │   Railway        │ ◄─────► │   Atlas      │
-│  (Frontend)  │         │   (Backend API)  │         │  (Database)  │
+│   Vercel      │  ←→     │   Render          │  ←→     │   MongoDB    │
+│  (Frontend)   │         │   (Backend)       │         │   Atlas      │
+│   FREE        │         │   FREE            │         │   FREE       │
 └──────────────┘         └──────────────────┘         └──────────────┘
-                                  │
-                                  ▼
-                         ┌──────────────┐
-                         │  Cloudinary  │
-                         │  (Images)    │
-                         └──────────────┘
 ```
 
-| Service | Tier | Cost |
+| Service | What It Hosts | Cost |
 |---|---|---|
-| Vercel / Netlify | Free tier | $0 |
-| Render / Railway | Free tier | $0 |
-| MongoDB Atlas | Free (M0 — 512MB) | $0 |
-| Cloudinary | Free (25GB) | $0 |
+| **Vercel** | The website (frontend) | Free |
+| **Render** | The server (backend) | Free |
+| **MongoDB Atlas** | The database | Free (512MB) |
+| **Cloudinary** | Recipe images | Free (25GB) |
 
-> **Total cost: $0** — The entire stack can be hosted for free during development and early use.
+> **Total cost: $0** — Everything runs on free tiers.
 
 ---
 
-## Security Considerations
+## Security (The Basics)
 
-| Concern | Mitigation |
+The AI agent will handle security best practices, but here's what you should know exists:
+
+| What | Why |
 |---|---|
-| Password storage | Hash with `bcrypt` (10+ salt rounds) — never store plain text |
-| Authentication | JWT with expiration (e.g., 7 days), stored in `httpOnly` cookie or localStorage |
-| Input validation | Validate all inputs server-side with `express-validator` |
-| XSS protection | Sanitize user-generated content before rendering |
-| CORS | Configure `cors` middleware to only allow your frontend domain |
-| Environment secrets | Use `.env` files, never commit secrets to Git |
-| Image uploads | Validate file type and size with `multer`, scan for malicious content |
-| Rate limiting | Add `express-rate-limit` to prevent abuse on auth and API routes |
+| **Passwords are scrambled** | Even if someone hacked the database, they can't read passwords |
+| **Login tokens expire** | You get logged out eventually, so stolen tokens don't work forever |
+| **Inputs are checked** | The server makes sure nobody sends weird or dangerous data |
+| **Secrets aren't in the code** | Passwords and API keys are stored in secret config files that don't go to GitHub |
 
 ---
 
-> *This architecture is intentionally beginner-friendly while following real-world patterns. As you learn, you can swap out or upgrade any layer.*
+> *You don't need to understand every line of this document. It's here so that when you're curious — "wait, where are recipe images stored?" — you have a place to look.*
